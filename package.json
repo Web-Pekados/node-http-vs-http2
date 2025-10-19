@@ -16,9 +16,21 @@
     "test:nodejs": "h2load --h1 -n 500000 -c 50 -m 30 http://localhost:3003",
     "test:fastify-from-browser": "h2load --h1 -n 500000 -c 6 -m 1 http://localhost:3003"
   },
-  "keywords": [],
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "http",
+    "http2",
+    "benchmark",
+    "nodejs",
+    "fastify",
+    "express",
+    "grpc"
+  ],
+  "license": "MIT",
+  "description": "Benchmark HTTP/1.1 vs HTTP/2 with Node.js frameworks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Web-Pekados/node-http-vs-http2.git"
+  },
   "dependencies": {
     "fastify": "^5.3.3",
     "express": "^4.18.2",
