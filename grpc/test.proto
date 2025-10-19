@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package test;
+
+service TestService {
+  rpc calculateValue(Empty) returns (ValueResponse);
+}
+
+message Empty {}
+
+message ValueResponse {
+  double value = 1;
+}

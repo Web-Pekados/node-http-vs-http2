@@ -1,0 +1,28 @@
+{
+  "name": "node-http-vs-http2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Pekados",
+  "scripts": {
+    "start:grpc": "cd grpc && node server.js",
+    "start:express": "cd express && node server.js",
+    "start:fastify": "cd fastify && node server.js",
+    "start:fastify-http2": "cd fastify-http2 && node server.js",
+    "start:nodejs": "cd nodejs && node server.js",
+    "test:grpc": "ghz --insecure -n 500000 -c 50 --proto ./grpc/test.proto --call test.TestService.calculateValue localhost:3003",
+    "test:express": "h2load -n 500000 --h1 -c 50 -m 30 http://localhost:3003",
+    "test:fastify": "h2load --h1 -n 500000 -c 50 -m 30 http://localhost:3003",
+    "test:fastify-http2": "h2load -n 500000 -c 50 -m 30 http://localhost:3003",
+    "test:nodejs": "h2load --h1 -n 500000 -c 50 -m 30 http://localhost:3003",
+    "test:fastify-from-browser": "h2load --h1 -n 500000 -c 6 -m 1 http://localhost:3003"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fastify": "^5.3.3",
+    "express": "^4.18.2",
+    "@grpc/grpc-js": "^1.9.14",
+    "@grpc/proto-loader": "^0.7.10"
+  }
+}
