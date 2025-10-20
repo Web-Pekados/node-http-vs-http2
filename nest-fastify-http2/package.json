@@ -1,0 +1,35 @@
+{
+  "name": "nest-fastify-http2",
+  "version": "1.0.0",
+  "description": "NestJS with Fastify and HTTP/2 support",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/platform-fastify": "^10.0.0",
+    "fastify": "^5.3.3",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "@nestjs/schematics": "^10.0.0",
+    "@types/node": "^20.3.1",
+    "typescript": "^5.1.3"
+  },
+  "keywords": [
+    "nestjs",
+    "fastify",
+    "http2",
+    "benchmark"
+  ],
+  "author": "Pekados",
+  "license": "MIT"
+}

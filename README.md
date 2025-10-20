@@ -10,6 +10,7 @@
 
 - **Fastify HTTP/1.1** - стандартный Fastify сервер
 - **Fastify HTTP/2** - Fastify с поддержкой HTTP/2 (h2c - без TLS)
+- **NestJS Fastify HTTP/2** - NestJS с Fastify и HTTP/2 (h2c - без TLS)
 - **Express** - Express.js сервер
 - **Node.js** - нативный HTTP сервер
 - **gRPC** - gRPC сервер для сравнения
@@ -20,6 +21,8 @@
 
 ```bash
 npm install
+
+cd nest-fastify-http2 && npm i
 ```
 
 #### Установка инструментов тестирования
@@ -78,8 +81,9 @@ npm run start:fastify
 npm run start:express
 npm run start:nodejs
 
-# HTTP/2 сервер
+# HTTP/2 серверы
 npm run start:fastify-http2
+npm run start:nest-fastify-http2
 
 # gRPC сервер
 npm run start:grpc
@@ -90,11 +94,12 @@ npm run start:grpc
 #### Стандартные тесты (высокая нагрузка)
 
 ```bash
-npm run test:fastify          # HTTP/1.1 Fastify
-npm run test:fastify-http2    # HTTP/2 Fastify
-npm run test:express          # HTTP/1.1 Express
-npm run test:nodejs           # HTTP/1.1 Node.js
-npm run test:grpc             # gRPC
+npm run test:fastify            # HTTP/1.1 Fastify
+npm run test:fastify-http2      # HTTP/2 Fastify
+npm run test:nest-fastify-http2 # HTTP/2 NestJS Fastify
+npm run test:express            # HTTP/1.1 Express
+npm run test:nodejs             # HTTP/1.1 Node.js
+npm run test:grpc               # gRPC
 ```
 
 #### Браузерная симуляция (реалистичные ограничения)
@@ -108,18 +113,22 @@ npm run test:fastify-from-browser  # HTTP/1.1 с ограничениями бр
 - **h2load** - для HTTP/1.1 и HTTP/2 тестирования
 - **ghz** - для gRPC тестирования
 - **-n 500000** - общее количество запросов
-- **-c 50** - количество одновременных соединений
-- **-m 30** - максимальное количество потоков на соединение
+- **-c 500** - количество одновременных соединений (для HTTP/1.1)
+- **-c 50** - количество одновременных соединений (для HTTP/2)
+- **-m 1** - максимальное количество потоков на соединение (для HTTP/1.1)
+- **-m 10** - максимальное количество потоков на соединение (для HTTP/2)
+- **-c 80** - количество одновременных соединений (для gRPC)
 
 ### Результаты тестирования
 
 | Сервер  | Протокол | Запросов/сек | Параметры   |
 | ------- | -------- | ------------ | ----------- |
-| Fastify | HTTP/1.1 | ~86,157      | -c 50 -m 30 |
-| Fastify | HTTP/2   | ~39,272      | -c 50 -m 30 |
-| Express | HTTP/1.1 | ~14,724      | -c 50 -m 30 |
-| Node.js | HTTP/1.1 | ~83,862      | -c 50 -m 30 |
-| gRPC    | gRPC     | ~22,742      | -c 50       |
+| Fastify | HTTP/1.1 | ~29,058      | -c 500 -m 1 |
+| Fastify | HTTP/2   | ~32,539      | -c 50 -m 10 |
+| NestJS  | HTTP/2   | ~24,522      | -c 50 -m 10 |
+| Express | HTTP/1.1 | ~8,581       | -c 500 -m 1 |
+| Node.js | HTTP/1.1 | ~34,560      | -c 500 -m 1 |
+| gRPC    | gRPC     | ~24,098      | -c 80       |
 
 ### Особенности тестирования
 
@@ -127,6 +136,30 @@ npm run test:fastify-from-browser  # HTTP/1.1 с ограничениями бр
 - Все серверы работают на порту 3003
 - Простой endpoint: `Math.pow(5, 10)` - вычисление 5^10
 - Тестирование проводится локально для исключения сетевых задержек
+- Разные параметры для HTTP/1.1 и HTTP/2 для оптимизации каждого протокола
+
+### Выводы
+
+В данном тесте с оптимизированными параметрами:
+
+**HTTP/2 показывает лучшую производительность:**
+- Fastify HTTP/2: ~32,539 req/s (лучший HTTP/2 результат)
+- Node.js HTTP/1.1: ~34,560 req/s (лучший общий результат)
+- Fastify HTTP/1.1: ~29,058 req/s
+- NestJS HTTP/2: ~24,522 req/s (хорошо для фреймворка с декораторами)
+
+**gRPC показывает среднюю производительность:**
+- gRPC: ~24,098 req/s (хорошо для бинарного протокола)
+
+**Express показывает наихудшую производительность:**
+- Express HTTP/1.1: ~8,581 req/s (в 4 раза медленнее Fastify)
+
+**Ключевые факторы:**
+- HTTP/2 эффективнее при правильной настройке параметров
+- Fastify значительно быстрее Express
+- Node.js нативный сервер показывает отличную производительность
+- NestJS показывает хорошую производительность для фреймворка с декораторами
+- gRPC подходит для сложных операций, но имеет overhead для простых вычислений
 
 ---
 
@@ -140,6 +173,7 @@ A project for comparing HTTP/1.1 and HTTP/2 protocol performance using various N
 
 - **Fastify HTTP/1.1** - standard Fastify server
 - **Fastify HTTP/2** - Fastify with HTTP/2 support (h2c - without TLS)
+- **NestJS Fastify HTTP/2** - NestJS with Fastify and HTTP/2 (h2c - without TLS)
 - **Express** - Express.js server
 - **Node.js** - native HTTP server
 - **gRPC** - gRPC server for comparison
@@ -150,6 +184,8 @@ A project for comparing HTTP/1.1 and HTTP/2 protocol performance using various N
 
 ```bash
 npm install
+
+cd nest-fastify-http2 && npm i
 ```
 
 #### Install Testing Tools
@@ -208,8 +244,9 @@ npm run start:fastify
 npm run start:express
 npm run start:nodejs
 
-# HTTP/2 server
+# HTTP/2 servers
 npm run start:fastify-http2
+npm run start:nest-fastify-http2
 
 # gRPC server
 npm run start:grpc
@@ -220,11 +257,12 @@ npm run start:grpc
 #### Standard Tests (High Load)
 
 ```bash
-npm run test:fastify          # HTTP/1.1 Fastify
-npm run test:fastify-http2    # HTTP/2 Fastify
-npm run test:express          # HTTP/1.1 Express
-npm run test:nodejs           # HTTP/1.1 Node.js
-npm run test:grpc             # gRPC
+npm run test:fastify            # HTTP/1.1 Fastify
+npm run test:fastify-http2      # HTTP/2 Fastify
+npm run test:nest-fastify-http2 # HTTP/2 NestJS Fastify
+npm run test:express            # HTTP/1.1 Express
+npm run test:nodejs             # HTTP/1.1 Node.js
+npm run test:grpc               # gRPC
 ```
 
 #### Browser Simulation (Realistic Constraints)
@@ -238,18 +276,22 @@ npm run test:fastify-from-browser  # HTTP/1.1 with browser limitations
 - **h2load** - for HTTP/1.1 and HTTP/2 testing
 - **ghz** - for gRPC testing
 - **-n 500000** - total number of requests
-- **-c 50** - number of concurrent connections
-- **-m 30** - maximum number of streams per connection
+- **-c 500** - number of concurrent connections (for HTTP/1.1)
+- **-c 50** - number of concurrent connections (for HTTP/2)
+- **-m 1** - maximum number of streams per connection (for HTTP/1.1)
+- **-m 10** - maximum number of streams per connection (for HTTP/2)
+- **-c 80** - number of concurrent connections (for gRPC)
 
 ### Test Results
 
-| Server  | Protocol | Req/sec | Parameters  |
-| ------- | -------- | ------- | ----------- |
-| Fastify | HTTP/1.1 | ~86,157 | -c 50 -m 30 |
-| Fastify | HTTP/2   | ~39,272 | -c 50 -m 30 |
-| Express | HTTP/1.1 | ~14,724 | -c 50 -m 30 |
-| Node.js | HTTP/1.1 | ~83,862 | -c 50 -m 30 |
-| gRPC    | gRPC     | ~22,742 | -c 50       |
+| Server  | Protocol | Req/sec      | Parameters  |
+| ------- | -------- | -------      | ----------- |
+| Fastify | HTTP/1.1 | ~29,058      | -c 500 -m 1 |
+| Fastify | HTTP/2   | ~32,539      | -c 50 -m 10 |
+| NestJS  | HTTP/2   | ~24,522      | -c 50 -m 10 |
+| Express | HTTP/1.1 | ~8,581       | -c 500 -m 1 |
+| Node.js | HTTP/1.1 | ~34,560      | -c 500 -m 1 |
+| gRPC    | gRPC     | ~24,098      | -c 80       |
 
 ### Testing Features
 
@@ -257,6 +299,7 @@ npm run test:fastify-from-browser  # HTTP/1.1 with browser limitations
 - All servers run on port 3003
 - Simple endpoint: `Math.pow(5, 10)` - calculation of 5^10
 - Testing performed locally to exclude network delays
+- Different parameters for HTTP/1.1 and HTTP/2 to optimize each protocol
 
 ### License
 
